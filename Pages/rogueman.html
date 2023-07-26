@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name"=author" content="Marko Laitinen">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="keywords" content="Game Projects, Platformer, Roguelite">
+        <link rel="stylesheet" href="../CSS/portfolio.css">
+        <title>Project: Rogueman</title>
+    </head>
+    
+    <div class="navigation">
+        <button class="dropButton">Site Navigation</button>
+        <div class="dropContent">
+            <a href="../index.html">Main</a>
+            <a href="../Pages/cv.html">CV</a>
+            <a href="../Pages/rogueman.html">Project: Rogueman</a>
+            <a href="../Pages/TBSproject.html">Project: Turn based strategy</a>
+            <a href="../Pages/3D.html">3D Modeling</a>
+        </div>
+    </div>
+    
+    <body>
+        <div id="pageWrapper">
+            <div id="contentWrapper">
+                <div id="projectTitle" class="center content">
+                    <h1>Rogueman</h1>
+                </div>
+                <div id="infoBox" class="center content">
+                    <h1>Project info</h1>
+                    <p>Duration: Jan.2023 - Ongoing</p>
+                    <p>Objective: Produce a roguelite platformer with randomized levels</p>
+                    <p>Team:<br>
+                    Marko Laitinen (Game idea/design, Programming in Unity and C#)<br>
+                    Jonne Soininen (Game design, Level Design, 3D Modeling)                    
+                    </p>                
+                </div>
+                <div id="descriptionBox" class="center content">
+                    <h1>Project description</h1>
+                    <p>Project Rogueman is a simple 2.5D platformer with randomized levels<br>
+                    The world is generated from prefab rooms that are placed in random order and allow traversal to next room through teleporters.<br>
+                    At it´s most basic, our plan was to include basic platforming movement and simple melee combat along with some useable items and collectibles.
+                    </p>
+                    
+                    </div>
+                <div id="content1" class="center content">
+                    <h1>World Generator</h1>
+                    <p>The first part of the game that i began developing. As a personal goal, i was interested in how to dynamically create the worlds seen in other action roguelites.</p>
+                    <p>While my original vision was closer to games with light metroidvania style maps, similar to games like Rogue Legacy and Dead Cells, ultimately we decided on a simpler format of linear rooms with branching paths as a potential "nice to have" feature.
+                    </p>
+                    <p>The first challenges i began solving were how to space the rooms in the scene and how to create teleporter links between them. I wanted the script to be capable of handling multiple room sizes, therefore it needed to be able to know the dimensions of both the previous and next room. This was originally a problem, as using collider sizes did not result in proper spacing and often resulted in overlapping rooms. I solved this by instead using the renderer bounds size of the room to calculate distances.</p>
+                    <p>To create the links between teleporters i had to create new scripts for both rooms and teleporters, these are explained in more detail in their own section.</p>
+                    <p>The intended structure of the world ended up being as follows: A preset starting room followed by the randomly generated rooms and ending in a boss room. As a part of the random rooms there are also item rooms, the generator can be set to generate a specific amount of them and at every generation step it checks against a percentage based chance if an item room is created. However to ensure the minimum amount of item rooms, the generator also checks if the remaining total rooms is equal to remaining item rooms and fills the remaining slots with item rooms if necessary.</p>
+                    <p>Finally the generator can also be toggled to either generate unique rooms only, or allow duplicates. This works simply by having all the room prefabs in a list which the room are removed from on generation if we are allowing uniques only.</p>
+                    <img src=../IMG/generator.jpg alt="Generator screenshot">
+                </div>
+                <div id="content2" class="center content">
+                    <h1>Player Character</h1>
+                    <p>When i started with the player character the immediate goal was to simply make something i could move around for purposes of testing teleporters and room colliders. <br>
+                    Very soon i ran into problems with programming the movements, the game was intended for 2.5D graphics but due to inexperience i ended up working with 3D colliders and physics, i am still not entirely sure if using 2D physics would have made things better, but it will be something i will try on some other project. <br>
+                    The actual problems i ran into were figuring out how to program the movement in such a way that player pushing against the wall does not cause "jittering" and jumping against walls does not cause player to stick to them. Also getting the jump physics to behave properly was a challenge and to this day i am not satisfied with how the jump feels, it uses a simple addition of upwards force to the character and unity physics to handle gravity. I tried to program a custom jump force and gravity based on a tutorial i found, but it was designed for 2D physics and did not work properly with 3D physics and rigidbodies.
+                    </p>
+                    <p>The simpler problem to solve was sticking to walls, while finding the solution itself took some time, it was simply a matter of adding a physics material to the character that would eliminate friction between character and walls.<br>
+                    As for the jittering, placing the movement logic to fixedUpdate from update helped, i was informed that fixedUpdate works better with physics and after the change trying to push into walls no longer resulted in the player character trying to go inside the wall.
+                    </p>
+                    <p>Once i had basic controls down for testing, the next step for developing the character was to begin creating groundwork for actual interaction with the game world, i created a health system that included health, shields and healing. I didn't have enemies in the game at that moment so i made a series of debug keys that would call the various functions for taking and healing damage.</p>
+                    <p>The basic debugging functions succeeded in their purpose and i could cause damage to player and losing all health would call death function that prevents player from acting.</p>
+                    <p>The shields act as an extra layer of nonrecoverable health that is consumed before player takes actual health damage, the system checks if damage received is higher than existing shields and will pass over extra damage to health properly, likewise the system includes a check that prevents overhealing, if player receives healing that goes over the maximum, player health is adjusted to maximum</p>
+                    <p>Going back to the earlier problem of player sticking to walls, once i began to implement a knockback system, the same physics material that i used to prevent player sticking to walls was now causing the player character to slide on floors after knockback. Ultimately the solution i found was to add a second collider that would be at around the bottom(feet) of the character, while the original collider would cover the sides. This way i had a collider that would prevent sticking to walls and another that would prevent sliding on floors.</p>
+                    <p>We wanted the player to have a basic melee attack as their primary means of offence. I set out to seek out tutorials and for the purposes of the game settled on a solution where player is given an attack point that checks within a specified range if there are enemies. Then all enemies inside the range would call their takeDamage() function. For further purposes of animating i already had a bool for checking player facing and i used it to place the attack point on the approriate side.</p>
+                </div>
+                <div id="content3" class="center content">
+                    <h1>Rooms and Teleporters</h1>
+                    <p>Initially the "rooms" were represented as simple platforms that i used as placeholders, in order to continue testing and developing the game further i created a basic rooms script and teleporter script. <br>
+                    Both of these scripts would interact with the world generator to create the teleporter links between rooms in the right order, so that the player character can traverse through all of the generated rooms.
+                    </p>
+                    <p>When creating prefabs for the rooms, i place the starting point and teleporter as child objects of the room itself and place them into their own variables in the room script. During world generation when the generator is creating a new room, it uses the room script to keep track of the starting point and teleporter of both the previously created room and the next room to create. It will pass on the information of starting point in the new room to the teleporter in previous room to allow movement between rooms in correct order.</p>
+                    <p>At the moment the teleporter script simply keeps track of its destination and has a simple trigger that sends player there once they enter it. Player is sent to the next room instantly, but i would like to add some kind of transition effect and animation to the process.</p>
+                    <p>Once the first prototype enemy was created, i began placing them into the room prefabs, while this did not cause any problems i realized that all of the rooms being created into the same scene at once could result in performance issues or unwanted enemy behaviour if all the enemies are active at all times. So i created a system that checks for all enemies in the room and disables them at start, the enemies are then enabled once player enters the room.</p>
+                    <p>Likewise, once player leaves a room, all the enemies in it are removed as they are no longer needed.</p>
+                    <img src=../IMG/stage.jpg alt="Stage screenshot">
+                </div>
+                <div id="content4" class="center content">
+                    <h1>Enemies</h1>
+                    <p>There currently only enemy in the game is a simple patrolling enemy that walks back and forth, turning around when it encounters and obstacle or ledge. I used raycasts to determine if either of these situation occur, a horizontal cast to see if it hits a wall and a downwards raycast that originates a little bit from the side that causes the patroller to turn if it does not hit ground.</p>
+                    <p>At first a mostly copied a lot of the players health script on the enemy to enable damaging it, but after programming classes around this time i learned more about creating classes and moved health to its own script that both the player and enemies use. Further improvement would be to create a shared character class that player character and enemies inherit from.</p>
+                    <p>At this point the enemy does not really acknowledge the player and will simply cause damage and knockback on touch.</p>
+                </div>
+            <div id="content5" class="center content">
+                <h1>Pickups</h1>
+                <p>From the start we wanted the game to have items for the player to collect. The first item to be implemented was a diamond that would increment score. The idea of somekind of shop to be included was thrown around and the diamonds would potentially also act as money to be spent in these shops, but the shop and inventory systems are not implemented at the time of writing.</p>
+                <p>Programming these was simply enough, however an unexpected issue came up when it turned out that the dual colliders i had used to fix the player characters sliding and sticking issues were causing each item to activate twice.</p>
+                <p>As solution i ended up learning more about layer masks and used them to prevent my supplementary collider from interacting with pickups.</p>  
+            </div>
+                <div id="content6" class="center content">
+                    <h1>Video</h1>
+                    <p>A gameplay video from the project as of April 2023. Do note that in this version the starting room is still a placeholder and the teleporters are not visible, the asset for the teleporter had been made, but not integrated into the levels at the time of recording.
+                    </p>
+                    <p>A couple of physics bugs are also present as you may notice the player character getting stuck on certain edges.</p>
+                    <p>The basic melee attack can be seen in function, but at the time it does not have a visual effect, however it will cause damage to nearby enemies, you can see the enemies disappear from screen as they are attacked.</p>
+                    <video class="projectVid" controls>
+                        <source src=../VID/roguemanVideo.mp4 type="video/mp4">
+                    </video>
+                </div>
+            </div>        
+        </div>    
+    </body>
+</html>

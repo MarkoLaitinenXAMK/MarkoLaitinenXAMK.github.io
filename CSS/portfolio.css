@@ -1,0 +1,78 @@
+/* Author: Marko Laitinen */
+/*Date 3.4.2023 */
+html, body{margin:10px;background-color: black; font-family: "Times New Roman", Times, serif};
+#pageWrapper{width: 50px;}
+
+p{color: white}
+h1{color: white}
+h2{color: white}
+a{color: yellow}
+li{float:center}
+label{color: white}
+
+input[type=text], select {
+  width: 60%;
+  padding: 12px 20px;
+  margin: 8px 0;  
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.dropButton{
+background-color: #848484;
+color: white;
+padding: 16px;
+
+}
+.navigation{    
+    position:static;
+    display: inline-block;
+    margin: auto;
+}
+.dropContent{
+    display: none;
+    position: absolute;
+    background-color: #848484;
+    min-width: 200px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+.dropContent a{
+    color: yellow;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+.dropContent a:hover {background-color: gray}
+.navigation:hover .dropContent {display: block;}
+.navigation:hover .dropButton {
+    background-color: lightgray;
+}
+/*Luokka on center koska alunperin halusin että teksti on keskitetty, mutta muutin mieleni*/
+.center{text-align: left;}
+.content{padding: 10px; margin: 10px; background-color: darkslategray}
+.subcontent{padding: 10px; margin: 10px; background-color:#848484}
+.flex{display: flex; align-items: center; justify-content: center;}
+.image{margin-right: 10px;}
+
+@media screen and (min-width: 300px){
+    body{min-width: 300px;}
+    .content{width: 90%;}
+    .projectHeader{max-height:50px; max-width: 50px;}
+    video{max-width: 70%; max-height: 70%;}
+    img{max-height: 80%; max-width: 80%;}
+}
+@media screen and (min-width: 600px){
+    .content{margin:auto; margin-bottom: 10px; width 500px;}
+    .projectHeader{max-height: 300px; max-width: 300px;}
+    video{max-width: 450px; max-height: 450px;}
+    img{max-height: 500px; max-width: 500px;}
+}
+@media screen and (min-width: 990px) {
+    
+    .content{margin:auto; margin-bottom:  10px; width: 900px;}
+    .projectHeader{max-height: 500px; max-width: 500px;}
+    video{max-width: 900px; max-height: 900px;}
+    img{max-height: 600px; max-width: 600px;}
+}

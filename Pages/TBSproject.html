@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="author" content="Marko Laitinen">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="keywords" content="Game Projects, Turnbased, strategy, Learning">
+        <link rel="stylesheet" href="../CSS/portfolio.css">
+        <title>Project: Turnbased Strategy</title>
+    </head>
+    
+    <div class="navigation">
+        <button class="dropButton">Site Navigation</button>
+        <div class="dropContent">
+            <a href="../index.html">Main</a>
+            <a href="../Pages/cv.html">CV</a>
+            <a href="../Pages/rogueman.html">Project: Rogueman</a>
+            <a href="../Pages/TBSproject.html">Project: Turn based strategy</a>
+            <a href="../Pages/3D.html">3D Modeling</a>
+        </div>
+        
+    </div>
+    <body>
+        <div id="pageWrapper">
+            <div id="contentWrapper">
+                <div id="projectTitle" class="center content">
+                    <h1>Turn based strategy</h1>
+                </div>
+                <div id="infoBox" class="center content">
+                    <h1>Project info</h1>
+                    <p>Duration: May 2023 - Ongoing</p>
+                    <p>Objective: Follow a tutorial series on coding a turn based strategy game, and attempt to create an original game based on what i learn.</p>
+                    <p>Team: <br>
+                    Marko Laitinen (Solo project)
+                    </p>                
+                </div>
+                <div id="descriptionBox" class="center content">
+                    <h1>Project description</h1>
+                    <p>This is a independent study project where i follow a series of tutorials to improve my coding and 3d skills.</p>
+                    <p>For this project i am using the following video series from GameDev.TV<br>
+                    Unity Turn Based Strategy<br>
+                    Complete Blender Creator 3<br>
+                    Blender Character Creator v2.0</p>
+                    <p>My intent is to follow the game creation tutorial and complete it, using what i have learned i will attempt to design and implement a strategy game that builds upon the foundations and skills gained from the tutorial.</p>
+                    <p>I will also look into improving my 3D modeling skills using Blender. I plan to include my own assets in the prototype game.</p>
+                </div>
+                <div id="content1" class="center content">
+                    <h1>Universal Render Pipeline (URP) and Post Processing</h1>
+                    <p>After intial setup the first topic in the tutorials was a fairly quick look into Unity's URP and Post Processing settings. What i learned was that when starting a project that supports URP, there is a "Global Volume" object added to the unity scene. It is possible to create multiple profiles which contain different post processing effects. These can be used to create presets for different visual quality levels.</p>
+                </div>
+                <div id="content2" class="center content">
+                    <h1>Early parts of the tutorial</h1>
+                    <p>After the introduction to URP, the early parts of the tutorial focused on visual aspects, preliminary movement logic and theory on good programming practices.</p>
+                    <p>For visuals there was a brief rundown of using Unity animator. 3D assets were provided as a part of the tutorial series and animations were downloaded from Mixamo. The tutorial explained how to change animator states in order to play different animations and how to fix issues with animations using the record function. In this example a rifle that was placed into the characters hand was pointing the wrong way during the walk cycle, it's rotation was fixed and the new rotation was recorded into the animation.</p>
+                    <p>A system to handle simple movement and unit selection was also created early on, as a part of the explanation on how to create good program structure, a large number on individual scripts were created, according to the tutorials it is always good to make scripts for specialized purposes rather than include everything in a single script.<br> 
+                    So the earliest scripts were: Unit (contains logic for what the units themselves do), Action system (used to pass orders to units which they then follow), Mouse handling (a system which uses raycast to determine current world position of the mouse cursor to enable clicking on units and recognize world positions for unit movement) and Selection Visual (a system that toggles a circle beneath the unit to indicate whether it is selected or not).<br>
+                    To utilize these scripts the tutorial also introduced the concepts of using static scripts to create singletons (as the only needs a single action system in scene) and events, at this point primarily used for unit selection, the action system sends out the event call when a unit is selected and the selection visual receives it, toggling it on for the selected unit and off for the previously selected unit</p>
+                </div>
+                <div id="content3" class="center content">
+                    <h1>Grid and camera</h1>
+                    <p>While the previously created movement logic was a fairly simple modification of the current position to the new one, it is clearly intented to serve only for animating the unit movement rather than act as the actual movement logic, the real purpose being to have units move on a grid.<br>
+                    This system was also divided into multiple scripts: Grid System which handles the creation of the grid itself,  Grid Object which handles the status of each grid position such as whether a unit is currently standing on it, Grid Position struct to handle coordinates of the grid itself (as opposed to unity world coordinates) and Level grid which acts as the handler that uses all these scripts, but at the early parts the system mostly creates the grid positions and recognizes if a unit is standing at a specific tile. <br>
+                    However before moving on to implementing the actions and proper grid movement, the tutorial goes on to introduce Cinemachine and how to use it for a controllable ingame camera.<br>
+                    Cinemachine turned out to be quite a handy tool for camera control, after importing the package and adding a VirtualCamera to the project, one would then include an empty that is used as a CameraController. Modifying the settings on VirtualCamera then allows easy setup of offsets and camera follow. Of course handling camera movement, rotation and zoom required additional scripting. 
+                    </p>
+                </div>
+                <div id="content4" class="center content">
+                    <h1>Unit actions</h1>
+                    <p>Unit actions are implemented with a base action class that all further actions inheirt from. The tutorials introduced the concept of virtual and abstract classes here. Abstract classes cannot be made instances of which is used for base action, as the base action itself doesn't do anything we don't want it to be added to any units. Virtual classes can be overridden by inheriting classes.</p>
+                    <P>The base class primarily includes common functions like holding reference to selected unit and checking if they can perform it at the moment.</P>
+                    <p>The main actions themselves (move, attack etc...) are inherited classes and implement the action itself while using the base class references to determine which unit will be performing the action.</p>
+                    <p>Events and delegates are used to call certain functions to switch unit states, i find these a bit hard to understand at this point, but Unitys own action keyword was used to simplify the event calls.</p>
+                    <p>The move action interacts with the grid system to locate grid positions within the units movement range. INSERT PATHFINDING STUFF HERE</p>
+                    <p>The shoot action uses a modified version of the code that validates positions for movement, it only validates grid locations that contain an unit which is in a different team as the currently selected unit, this way the code does not require modifications when used by the enemy side.
+                    
+                    </p>
+                    <p>The way unit actions are limited in the tutorials implementation is a simple version of the classic action points system, Every action costs a different amount of points to perform, and any combination of actions can be performed as long as there are enough points to do so. <br>
+                    </p>
+                </div>
+                <div id="content5" class="center content">
+                    <h1>UI</h1>
+                    <p>The UI uses buttons to select useable actions, these buttons are instantiated dynamically based on the currently selected unit. When a unit is delescted the buttons are destroyed, The script goes through every baseAction class in the unit and instantiates buttons that includes the action name on it, and the buttons are organized using Unity gridlayout module.</p>
+                    <p>To link the actions to UI buttons the button sends out an event to tell the actionsystem which action was selected. The course showed 2 different implementations for the functionality, the first involved a function that uses a switch case system to see which action was selected and then performs it.</p>
+                    <p>Since the switch case requires code for each and every possible situation, the alternate method uses generics, BaseAction class has a generic TakeAction function which inheritors then override, the same function call can then be used to for multiple actions. However this did mean that the code had to be refactored so that every action call receives the same arguments whether they need them or not.</p>
+                </div>
+                <div id="content6" class="center content">
+                    <h1>Turns</h1>
+                    <p></p>
+                </div>
+                <div id="content7" class="center content">
+                    <h1>stuff</h1>
+                    <p>Text here</p>
+                </div>
+                
+            
+            </div>        
+        </div>    
+    </body>
+</html>
