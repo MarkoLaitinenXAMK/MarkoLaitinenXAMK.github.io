@@ -74,18 +74,19 @@
                     <p>The shoot action uses a modified version of the code that validates positions for movement, it only validates grid locations that contain an unit which is in a different team as the currently selected unit, this way the code does not require modifications when used by the enemy side.
                     
                     </p>
-                    <p>The way unit actions are limited in the tutorials implementation is a simple version of the classic action points system, Every action costs a different amount of points to perform, and any combination of actions can be performed as long as there are enough points to do so. <br>
+                    <p>In the tutorial unit actions are limited with a simple version of the classic action points system, Every action costs a different amount of points to perform, and any combination of actions can be performed as long as there are enough points to do so. <br>
                     </p>
                 </div>
                 <div id="content5" class="center content">
                     <h1>UI</h1>
-                    <p>The UI uses buttons to select useable actions, these buttons are instantiated dynamically based on the currently selected unit. When a unit is delescted the buttons are destroyed, The script goes through every baseAction class in the unit and instantiates buttons that includes the action name on it, and the buttons are organized using Unity gridlayout module.</p>
+                    <p>The UI uses buttons to select useable actions, these buttons are instantiated dynamically based on the currently selected unit. When a unit is deselected the buttons are destroyed, The script goes through every baseAction class in the unit and instantiates buttons that includes the action name on it, and the buttons are organized using Unity gridlayout module.</p>
                     <p>To link the actions to UI buttons the button sends out an event to tell the actionsystem which action was selected. The course showed 2 different implementations for the functionality, the first involved a function that uses a switch case system to see which action was selected and then performs it.</p>
                     <p>Since the switch case requires code for each and every possible situation, the alternate method uses generics, BaseAction class has a generic TakeAction function which inheritors then override, the same function call can then be used to for multiple actions. However this did mean that the code had to be refactored so that every action call receives the same arguments whether they need them or not.</p>
                 </div>
                 <div id="content6" class="center content">
                     <h1>Turns</h1>
-                    <p></p>
+                    <p>The ealriest implementation of turns simply checks which side currently playing and allows player units to move when it is the player turn, both sides use the same unit class, so they are differentiated by a bool "isEnemy".
+                    AI would come later in the project so as a placeholder the enemy simply waits a bit and ends their turn.</p>
                 </div>
                 <div id="content7" class="center content">
                     <h1>stuff</h1>
